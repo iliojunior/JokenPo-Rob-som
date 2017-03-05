@@ -31,12 +31,12 @@ public class JokenPo {
         while (jogadas.size() > 1) {
             Map.Entry<Integer, Jogada> jogador1 = null;
             Map.Entry<Integer, Jogada> jogador2 = null;
-            int teste = 0;
+            int identificador = 0;
 
             for (Map.Entry<Integer, Jogada> item : jogadas.entrySet()) {
-                if (teste == 0) {
+                if (identificador == 0) {
                     jogador1 = item;
-                    teste++;
+                    identificador++;
                 } else {
                     jogador2 = item;
                     break;
@@ -60,10 +60,6 @@ public class JokenPo {
         }
 
         resultados.put(jogadorVencedor + 1, resultados.get(jogadorVencedor + 1) + 1);
-
-    }
-
-    public void encerrar() {
 
     }
 

@@ -64,7 +64,6 @@ public class JokenPoTest {
     public void TestUmaJogada() {
         final JokenPo jokenPo = new JokenPo(2);
         jokenPo.jogar("pP");
-        jokenPo.encerrar();
 
         assertEquals(jokenPo.getResultado(),
                 "Jogador 1 -> 1 pontos\n" +
@@ -76,7 +75,6 @@ public class JokenPoTest {
         final JokenPo jokenPo = new JokenPo(2);
         jokenPo.jogar("pP");
         jokenPo.jogar("pP");
-        jokenPo.encerrar();
 
         assertEquals(jokenPo.getResultado(),
                 "Jogador 1 -> 2 pontos\n" +
@@ -88,7 +86,6 @@ public class JokenPoTest {
         final JokenPo jokenPo = new JokenPo(2);
         jokenPo.jogar("pP");
         jokenPo.jogar("pt");
-        jokenPo.encerrar();
 
         assertEquals(jokenPo.getResultado(),
                 "Jogador 1 -> 1 pontos\n" +
