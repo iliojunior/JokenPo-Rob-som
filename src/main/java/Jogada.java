@@ -1,43 +1,18 @@
-public enum Jogada {
+public class Jogada {
 
-    PEDRA {
-        @Override
-        Jogada getVencedor() {
-            return PAPEL;
-        }
-    },
-    PAPEL {
-        @Override
-        Jogada getVencedor() {
-            return TESOURA;
-        }
-    },
-    TESOURA {
-        @Override
-        Jogada getVencedor() {
-            return PEDRA;
-        }
-    };
+    private final Jogador jogador;
+    private final TipoJogada jogada;
 
-    public Jogada desafiar(Jogada jogada) throws Exception {
-        if (equals(jogada))
-            throw new Exception("Empate");
-        return (jogada.equals(getVencedor()) ? jogada : this);
+    public Jogada(Jogador jogador, TipoJogada jogada) {
+        this.jogador = jogador;
+        this.jogada = jogada;
     }
 
-    abstract Jogada getVencedor();
+    public Jogador getJogador() {
+        return jogador;
+    }
 
-    public static Jogada getValue(char value) {
-        switch (value) {
-            case 'P':
-                return PEDRA;
-            case 'p':
-                return PAPEL;
-            case 't':
-                return TESOURA;
-            default:
-                break;
-        }
-        return null;
+    public TipoJogada getJogada() {
+        return jogada;
     }
 }

@@ -24,12 +24,12 @@ public class JokenPoTest {
 
     @Test
     public void TestEnumeradorPapelContraPedra() {
-        final Jogada jogada1 = Jogada.PAPEL;
-        final Jogada jogada2 = Jogada.PEDRA;
+        final TipoJogada tipoJogada1 = TipoJogada.PAPEL;
+        final TipoJogada tipoJogada2 = TipoJogada.PEDRA;
 
         try {
-            final Jogada resultado = jogada1.desafiar(jogada2);
-            assertEquals(resultado, Jogada.PAPEL);
+            final TipoJogada resultado = tipoJogada1.desafiar(tipoJogada2);
+            assertEquals(resultado, TipoJogada.PAPEL);
         } catch (Exception e) {
             fail("Nao era pra cair aqui");
         }
@@ -37,12 +37,12 @@ public class JokenPoTest {
 
     @Test
     public void TestEnumeradorPapelContraTesoura() {
-        final Jogada jogada1 = Jogada.PAPEL;
-        final Jogada jogada2 = Jogada.TESOURA;
+        final TipoJogada tipoJogada1 = TipoJogada.PAPEL;
+        final TipoJogada tipoJogada2 = TipoJogada.TESOURA;
 
         try {
-            final Jogada resultado = jogada1.desafiar(jogada2);
-            assertEquals(resultado, Jogada.TESOURA);
+            final TipoJogada resultado = tipoJogada1.desafiar(tipoJogada2);
+            assertEquals(resultado, TipoJogada.TESOURA);
         } catch (Exception e) {
             fail("Nao era pra cair aqui");
         }
@@ -55,7 +55,7 @@ public class JokenPoTest {
             jokenPo.jogar("pT");
             fail("Nao pode chegar aqui");
         } catch (RuntimeException ex) {
-            assertEquals(ex.getMessage(), "Jogada Invalida, jogador 2");
+            assertEquals(ex.getMessage(), "TipoJogada Invalida, jogador 2");
         }
 
     }
@@ -102,6 +102,7 @@ public class JokenPoTest {
                         "Jogador 2 -> 0 pontos\n" +
                         "Jogador 3 -> 1 pontos\n");
     }
+
     @Test
     public void TestTresJogadoresDuasJogadas() {
         final JokenPo jokenPo = new JokenPo(3);
@@ -113,6 +114,7 @@ public class JokenPoTest {
                         "Jogador 2 -> 0 pontos\n" +
                         "Jogador 3 -> 1 pontos\n");
     }
+
     @Test
     public void TestQuatroJogadores() {
         final JokenPo jokenPo = new JokenPo(4);
@@ -123,5 +125,15 @@ public class JokenPoTest {
                         "Jogador 2 -> 0 pontos\n" +
                         "Jogador 3 -> 1 pontos\n" +
                         "Jogador 4 -> 0 pontos\n");
+    }
+
+    @Test
+    public void TestVencedor() {
+        final JokenPo jokenPo = new JokenPo(4);
+        jokenPo.jogar("pPtp");
+        jokenPo.jogar("pPtp");
+        jokenPo.jogar("pPtp");
+
+        assertEquals(jokenPo.getVencedor(), "Jogador 3 -> 3 pontos");
     }
 }

@@ -1,75 +1,99 @@
 import java.util.*;
 
 public class JokenPo {
-    final Map<Integer, Integer> resultados = new HashMap<Integer, Integer>();
+    final ArrayList<Jogador> jogadores = new ArrayList<Jogador>();
 
-    public JokenPo(final int jogadores) {
-        if (jogadores < 2)
+    public JokenPo(final int quantidadeJogadores) {
+        if (quantidadeJogadores < 2)
             throw new RuntimeException("E necessario pelo menos 2 jogadores");
-        this.inicializarJogadores(jogadores);
+
+        this.inicializarJogadores(quantidadeJogadores);
     }
 
-    private void inicializarJogadores(int jogadores) {
-        for (int i = 1; i <= jogadores; i++) {
-            resultados.put(i, 0);
+    private void inicializarJogadores(int quantidadeJogadores) {
+        for (int i = 0; i < quantidadeJogadores; i++) {
+            final Jogador jogador = new Jogador("Jogador " + (i + 1));
+            jogadores.add(jogador);
         }
+    }
+
+    private Jogador getJogadorByNome(String nome) {
+
+        for (Jogador jogador : jogadores) {
+            if (jogador.getNome().equals(nome))
+                return jogador;
+        }
+
+        return null;
+    }
+
+    private List<Jogada> converterStringEmJogadas(String entradaJogadas) {
+        final List<Jogada> jogadas = new ArrayList<>();
+
+        for (int i = 0; i < entradaJogadas.length(); i++) {
+
+            final TipoJogada tipoJogada = TipoJogada.getValue(entradaJogadas.charAt(i));
+
+            if (tipoJogada == null)
+                throw new RuntimeException("TipoJogada Invalida, jogador " + (i + 1));
+
+            final Jogador jogador = getJogadorByNome("Jogador " + (i + 1));
+            final Jogada jogada = new Jogada(jogador, tipoJogada);
+
+            jogadas.add(jogada);
+        }
+
+        return jogadas;
     }
 
     public void jogar(String stringJogada) {
 
-        int jogadorVencedor = 0;
-        final Map<Integer, Jogada> jogadas = new TreeMap<Integer, Jogada>();
+        Jogador jogadorVencedor = null;
+        final List<Jogada> jogadasParaProcessar = converterStringEmJogadas(stringJogada);
 
-        for (int i = 0; i < stringJogada.length(); i++) {
-            final Jogada jogada = Jogada.getValue(stringJogada.charAt(i));
-            if (jogada == null)
-                throw new RuntimeException("Jogada Invalida, jogador " + (i + 1));
-            jogadas.put(i, jogada);
-        }
-
-
-        while (jogadas.size() > 1) {
-            Map.Entry<Integer, Jogada> jogador1 = null;
-            Map.Entry<Integer, Jogada> jogador2 = null;
-            int identificador = 0;
-
-            for (Map.Entry<Integer, Jogada> item : jogadas.entrySet()) {
-                if (identificador == 0) {
-                    jogador1 = item;
-                    identificador++;
-                } else {
-                    jogador2 = item;
-                    break;
-                }
-            }
+        while (jogadasParaProcessar.size() > 1) {
+            final Jogada jogadorDesafiante = jogadasParaProcessar.get(0);
+            final Jogada jogadorDesafiado = jogadasParaProcessar.get(1);
+            Boolean desafianteGanhou = false;
+            TipoJogada jogadaVencedora = null;
 
             try {
-                Jogada resultado = jogador1.getValue().desafiar(jogador2.getValue());
-                if (resultado.equals(jogador1.getValue())) {
-                    jogadorVencedor = jogador1.getKey();
-                    jogadas.remove(jogador2.getKey());
-                } else {
-                    jogadorVencedor = jogador2.getKey();
-                    jogadas.remove(jogador1.getKey());
-                }
-
+                jogadaVencedora = jogadorDesafiante.getJogada().desafiar(jogadorDesafiado.getJogada());
             } catch (Exception e) {
                 return;
             }
 
+            desafianteGanhou = jogadaVencedora.equals(jogadorDesafiante.getJogada());
+
+            jogadorVencedor = (desafianteGanhou ? jogadorDesafiante.getJogador() : jogadorDesafiado.getJogador());
+
+            jogadasParaProcessar.remove(desafianteGanhou ? 1 : 0);
+
         }
 
-        resultados.put(jogadorVencedor + 1, resultados.get(jogadorVencedor + 1) + 1);
+        jogadorVencedor.setPontuacao(jogadorVencedor.getPontuacao() + 1);
 
     }
 
     public String getResultado() {
         String msgSaida = "";
-        for (Map.Entry<Integer, Integer> item : resultados.entrySet()) {
-            msgSaida += "Jogador " + item.getKey() + " -> " + item.getValue() + " pontos";
-            msgSaida += "\n";
-        }
+
+        for (Jogador jogador : jogadores)
+            msgSaida += jogador.getNome() + " -> " + jogador.getPontuacao() + " pontos\n";
+
         return msgSaida;
+    }
+
+    public String getVencedor() {
+
+        Jogador jogadorVencedor = jogadores.get(0);
+
+        for (Jogador jogador : jogadores) {
+            if (jogador.getPontuacao() > jogadorVencedor.getPontuacao())
+                jogadorVencedor = jogador;
+        }
+
+        return jogadorVencedor.getNome() + " -> " + jogadorVencedor.getPontuacao() + " pontos";
     }
 }
 
